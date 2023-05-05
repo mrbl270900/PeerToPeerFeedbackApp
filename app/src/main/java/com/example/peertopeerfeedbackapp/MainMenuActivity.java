@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.net.InetAddress;
@@ -20,6 +21,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     private TextView infoText;
 
+    private EditText networkIdInput;
+
     private Button startNetwork, joinNetwork;
 
     private String THIS_IP_ADDRESS = "";
@@ -27,6 +30,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private String startButtonText = "Start network";
 
     private String joinButtonText = "Join a network";
+
+    private String hint = "Input Network Id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         startNetwork = findViewById(R.id.button);
         joinNetwork = findViewById(R.id.button2);
         infoText = findViewById(R.id.textView);
+        networkIdInput = findViewById(R.id.editTextText);
 
         startNetwork.setText(startButtonText);
 
@@ -49,6 +55,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         THIS_IP_ADDRESS = getLocalIpAddress();
 
         infoText.setText(THIS_IP_ADDRESS);
+
+        networkIdInput.setHint(hint);
+        networkIdInput.setText("");
     }//onCreate
 
     @Override
@@ -62,6 +71,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             //logic for joinNetwork
             Intent myIntent = new Intent(MainMenuActivity.this, JoinNetworkActivity.class);
             myIntent.putExtra("localIp", THIS_IP_ADDRESS); //Optional parameters
+            myIntent.putExtra("networkId", networkIdInput.getText());
             MainMenuActivity.this.startActivity(myIntent);
         }
     }//onClick

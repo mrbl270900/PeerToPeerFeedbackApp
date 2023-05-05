@@ -15,10 +15,20 @@ public class JoinNetworkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         String localIp = intent.getStringExtra("localIp");
+        String networkId = intent.getStringExtra("networkId");
         setContentView(R.layout.activity_main3);
 
         infoText = findViewById(R.id.textView3);
 
-        infoText.setText(localIp);
+        infoText.setText(networkId);
+    }
+
+
+    private void waitABit() {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
