@@ -6,22 +6,61 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+
 public class JoinNetworkActivity extends AppCompatActivity {
 
     private TextView infoText;
 
+    private String networkIp;
+
+    private String command;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         String localIp = intent.getStringExtra("localIp");
-        String networkId = intent.getStringExtra("networkId");
+        networkIp = intent.getStringExtra("networkId");
         setContentView(R.layout.activity_main3);
 
         infoText = findViewById(R.id.textView3);
 
-        infoText.setText(networkId);
+        infoText.setText(networkIp);
+
+        command = "hello";
+
+        Thread clientThread = new Thread(new MyClientThread());
+        clientThread.start();
     }
+
+    class MyClientThread implements Runnable {
+        @Override
+        public void run() {
+
+            try {
+                Socket connectionToServer = new Socket(networkIp, 4444);
+
+                DataInputStream inClientStream = new DataInputStream(connectionToServer.getInputStream());
+                DataOutputStream outClientStream = new DataOutputStream(connectionToServer.getOutputStream());
+                String messageFromServer;
+                outClientStream.writeUTF(command);
+                outClientStream.flush();
+                messageFromServer = inClientStream.readUTF();
+                waitABit();
+                connectionToServer.shutdownInput();
+                connectionToServer.shutdownOutput();
+                connectionToServer.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+
+        }//run()
+    } //class MyClientThread
 
 
     private void waitABit() {
