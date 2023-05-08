@@ -102,13 +102,13 @@ public class StartNetworkActivity extends AppCompatActivity {
                             System.out.println("server fail on command");
                             status = "400 bad rec";
                             response = "Fail";
+                            serverCarryOn = false;
                         }
 
                         String jsonString = status + response;
                         outNodeStream.writeUTF(jsonString);
                         outNodeStream.flush();
                         waitABit();
-                        serverCarryOn = false;
                     } catch (Exception e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);

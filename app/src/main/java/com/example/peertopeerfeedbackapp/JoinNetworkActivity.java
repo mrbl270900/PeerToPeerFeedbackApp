@@ -18,6 +18,8 @@ public class JoinNetworkActivity extends AppCompatActivity {
     private String networkIp;
 
     private String command;
+
+    private boolean clientCarryOn = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,18 +44,23 @@ public class JoinNetworkActivity extends AppCompatActivity {
 
             try {
                 Socket connectionToServer = new Socket(networkIp, 4444);
-
                 DataInputStream inClientStream = new DataInputStream(connectionToServer.getInputStream());
                 DataOutputStream outClientStream = new DataOutputStream(connectionToServer.getOutputStream());
                 String messageFromServer;
-                outClientStream.writeUTF(command);
-                outClientStream.flush();
-                messageFromServer = inClientStream.readUTF();
-                waitABit();
+
+                while (clientCarryOn) {
+
+                    //logic for client
+
+                    outClientStream.writeUTF(command);
+                    outClientStream.flush();
+                    messageFromServer = inClientStream.readUTF();
+                    waitABit();
+                }//while clientCarryOn
+
                 connectionToServer.shutdownInput();
                 connectionToServer.shutdownOutput();
                 connectionToServer.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);

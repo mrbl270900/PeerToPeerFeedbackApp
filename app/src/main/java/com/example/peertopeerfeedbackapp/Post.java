@@ -8,17 +8,19 @@ public class Post {
 
     private int id;
 
-    private String Subject;
+    private String subject;
 
     private List<Comment> commentsList;
 
 
-    public Post(){
-
+    public Post(String inputOwner, String inputSubject, int inputId){
+        owner = inputOwner;
+        id = inputId;
+        subject = inputSubject;
     }
 
-    public void addComment(){
-
+    public void addComment(String inputOwner, String inputContens){
+        commentsList.add(new Comment(inputOwner, inputContens, commentsList.toArray().length));
     }
 
 
