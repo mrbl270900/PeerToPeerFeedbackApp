@@ -22,6 +22,10 @@ public class StartNetworkActivity extends AppCompatActivity {
 
     private boolean serverCarryOn = true;
 
+    private String localIp;
+
+    private Network network;
+
     int clientNumber = 0;
 
     private Thread serverThread = new Thread(new MyServerThread());
@@ -30,7 +34,9 @@ public class StartNetworkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        String localIp = intent.getStringExtra("localIp");
+        localIp = intent.getStringExtra("localIp");
+        network = new Network(localIp);
+
         setContentView(R.layout.activity_main2);
 
         infoText = findViewById(R.id.textView2);
@@ -86,6 +92,9 @@ public class StartNetworkActivity extends AppCompatActivity {
                 String response = "ok";
                 String status = "200 ok";
                 serverCarryOn = true;
+
+                network.addPeer(client.getRemoteSocketAddress().toString());
+
                 //Start conversation
                 while (serverCarryOn) {
                     try {
