@@ -28,6 +28,18 @@ public class StartNetworkActivity extends AppCompatActivity {
 
     int clientNumber = 0;
 
+    private boolean clientCarryOn;
+
+    private Boolean sendCommand;
+
+    private String command;
+
+    private String body;
+
+    private Response response;
+
+    private String networkIp;
+
     private Thread serverThread = new Thread(new MyServerThread());
 
     @Override
@@ -65,6 +77,9 @@ public class StartNetworkActivity extends AppCompatActivity {
                         Socket clientSocket = serverSocket.accept();
                         clientNumber++;
                         new RemoteClient(clientSocket, clientNumber).start();
+                        networkIp = clientSocket.getRemoteSocketAddress().toString();
+                        Thread clientThread = new Thread(new MyClientThread());
+                        clientThread.start();
 
                     }//while listening for clients
 
@@ -93,16 +108,27 @@ public class StartNetworkActivity extends AppCompatActivity {
                 String status = "200 ok";
                 serverCarryOn = true;
 
-                network.addPeer(client.getRemoteSocketAddress().toString());
+                network.addPeer(client.getRemoteSocketAddress().toString(), client.getRemoteSocketAddress().toString());
 
                 //Start conversation
                 while (serverCarryOn) {
                     try {
                         str = (String) inNodeStream.readUTF();
+                        Request request = HandleApi.readHttpRequest(str);
                         try {
-                            if(str.equalsIgnoreCase("")){//logic for commands
-                            //logic for what to do
-                            } else {
+                            if(request.method.equalsIgnoreCase("addComment")){//logic for commands
+
+                            }else if(request.method.equalsIgnoreCase("addSubComment")){
+
+                            }else if(request.method.equalsIgnoreCase("getData")){
+
+                            }else if(request.method.equalsIgnoreCase("likeComment")){
+
+                            }else if(request.method.equalsIgnoreCase("endConnection")){
+
+                            }else if(request.method.equalsIgnoreCase("likePost")){
+
+                            }else {
                                 status = "400 bad rec";
                                 response = "Fail";
                             }
@@ -133,6 +159,41 @@ public class StartNetworkActivity extends AppCompatActivity {
             }
         }
     }
+    class MyClientThread implements Runnable {
+        @Override
+        public void run() {
+
+            try {
+                Socket connectionToServer = new Socket(networkIp, 4444);
+                DataInputStream inClientStream = new DataInputStream(connectionToServer.getInputStream());
+                DataOutputStream outClientStream = new DataOutputStream(connectionToServer.getOutputStream());
+                String messageFromServer;
+                clientCarryOn = true;
+                sendCommand = true;
+                command = "getData";
+                body = "";
+
+                while (clientCarryOn) {
+                    //logic for client
+                    if(sendCommand) {
+                        outClientStream.writeUTF(new Request(command, body).toString());
+                        outClientStream.flush();
+                        messageFromServer = inClientStream.readUTF();
+                        response = HandleApi.readHttpResponse(messageFromServer);
+                        waitABit();
+                    }
+                }//while clientCarryOn
+
+                connectionToServer.shutdownInput();
+                connectionToServer.shutdownOutput();
+                connectionToServer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+
+        }//run()
+    } //class MyClientThread
     private void waitABit() {
         try {
             Thread.sleep(1500);

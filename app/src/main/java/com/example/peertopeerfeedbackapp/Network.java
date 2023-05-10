@@ -5,7 +5,7 @@ import java.util.List;
 public class Network {
     private List<Post> postList;
 
-    private List<String> peerList;
+    private List<User> peerList;
 
     private String networkCode;
 
@@ -17,5 +17,24 @@ public class Network {
         postList.add(inputPost);
     }
 
-    public void addPeer(String inputIp){peerList.add(inputIp);}
+    public void addPeer(String inputIp, String inputUsername){peerList.add(new User(inputIp, inputUsername));}
+
+    public void EndNetwork(){
+
+    }
+
+    public void KickUser(String usermame){
+
+    }
+
+    private class User{
+        private String usermame;
+
+        private String ip;
+
+        public User(String inputIp, String inputUsername){
+            usermame = inputUsername;
+            ip = inputIp;
+        }
+    }
 }
