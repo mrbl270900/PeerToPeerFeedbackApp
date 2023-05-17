@@ -71,7 +71,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             //logic for joinNetwork
             Intent myIntent = new Intent(MainMenuActivity.this, JoinNetworkActivity.class);
             myIntent.putExtra("localIp", THIS_IP_ADDRESS); //Optional parameters
-            myIntent.putExtra("networkId", networkIdInput.getText());
+            myIntent.putExtra("networkId", networkIdInput.getText().toString());
             MainMenuActivity.this.startActivity(myIntent);
         }
     }//onClick

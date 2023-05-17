@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.DataInputStream;
@@ -12,16 +14,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
-public class JoinNetworkActivity extends AppCompatActivity {
+public class JoinNetworkActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView infoText;
+
+    private Button getDataButton;
 
     private String networkIp;
 
     private boolean clientCarryOn;
 
-    private Boolean sendCommand;
+    private Boolean sendCommand = false;
 
     private String command;
 
@@ -29,7 +34,11 @@ public class JoinNetworkActivity extends AppCompatActivity {
 
     private Response response;
 
+    private String getDataButtonText = "Get data";
+
     private boolean serverCarryOn = true;
+
+    private List<Post> postList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,10 @@ public class JoinNetworkActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main3);
 
         infoText = findViewById(R.id.textView3);
+
+        getDataButton = findViewById(R.id.button4);
+
+        getDataButton.setText(getDataButtonText);
 
         infoText.setText(networkIp);
 
@@ -52,6 +65,15 @@ public class JoinNetworkActivity extends AppCompatActivity {
         clientThread.start();
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view == getDataButton) {
+            command = "getData";
+            body = "";
+            sendCommand = true;
+        }
+    }
+
     class MyClientThread implements Runnable {
         @Override
         public void run() {
@@ -62,9 +84,6 @@ public class JoinNetworkActivity extends AppCompatActivity {
                 DataOutputStream outClientStream = new DataOutputStream(connectionToServer.getOutputStream());
                 String messageFromServer;
                 clientCarryOn = true;
-                sendCommand = true;
-                command = "getData";
-                body = "";
 
                 while (clientCarryOn) {
                     //logic for client
@@ -75,6 +94,10 @@ public class JoinNetworkActivity extends AppCompatActivity {
                         response = HandleApi.readHttpResponse(messageFromServer);
                         waitABit();
                     }
+                    if(command.equalsIgnoreCase("getData")){
+                        //logic for what to do when data is returned
+                    }
+
                 }//while clientCarryOn
 
                 connectionToServer.shutdownInput();

@@ -3,53 +3,16 @@ package com.example.peertopeerfeedbackapp;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class HandleApi {
 
     public static Request readHttpRequest(String input) throws RuntimeException{
         try {
             JSONObject json = new JSONObject(input);
-            Request request = new Request();
-            request.method = json.getString("method");
-            request.path = json.getString("path");
-            request.body = json.getString("body");
+            Request request = new Request(json.getString("method"), json.getString("body"));
             return request;
 
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String createHttpRequest(String method, String path, String body) throws RuntimeException{
-        try {
-            JSONObject json = new JSONObject();
-            Request request = new Request();
-            request.method = method;
-            request.path = path;
-            request.body = body;
-            json.put("header", "HTTP/1.1");
-            json.put("path", request.path);
-            json.put("method", request.method);
-            json.put("body", request.body);
-
-            return json.toString();
-
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    public static String createHttpResponse(String body, String status) throws RuntimeException{
-        Response response = new Response();
-        response.status = status;
-        response.body = body;
-
-        try {
-            JSONObject json = new JSONObject();
-            json.put("header", "HTTP/1.1");
-            json.put("status", response.status);
-            json.put("body", response.body);
-            return json.toString();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -67,5 +30,23 @@ public class HandleApi {
             throw new RuntimeException(e);
         }
     }
+
+    /*public static List<Post> readPostList(Response input){
+        try {
+            List<Post> postList;
+            String[] bodyList;
+
+            bodyList = input.body.split("posts");
+
+            for (int i = 0; i < bodyList.length; i++) {
+                postList.add();
+            }
+
+            return postList;
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
 
 }

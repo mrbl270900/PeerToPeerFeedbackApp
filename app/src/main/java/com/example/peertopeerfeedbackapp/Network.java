@@ -17,6 +17,8 @@ public class Network {
         postList.add(inputPost);
     }
 
+    public String getPostList(){return postList.toString();}
+
     public void addPeer(String inputIp, String inputUsername){peerList.add(new User(inputIp, inputUsername));}
 
     public void EndNetwork(){

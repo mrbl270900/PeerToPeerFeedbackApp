@@ -62,7 +62,7 @@ public class StartNetworkActivity extends AppCompatActivity {
 
     }
 
-    class MyServerThread implements Runnable { //TODO implemnt multi thread for server
+    class MyServerThread implements Runnable {
         @SuppressLint("SuspiciousIndentation")
         @Override
         public void run() {
@@ -115,13 +115,15 @@ public class StartNetworkActivity extends AppCompatActivity {
                     try {
                         str = (String) inNodeStream.readUTF();
                         Request request = HandleApi.readHttpRequest(str);
+                        infoText.setText(request.method);
                         try {
                             if(request.method.equalsIgnoreCase("addComment")){//logic for commands
 
                             }else if(request.method.equalsIgnoreCase("addSubComment")){
 
                             }else if(request.method.equalsIgnoreCase("getData")){
-
+                                network.addPost(new Post("mads", "ide", 123));
+                                response = network.getPostList();
                             }else if(request.method.equalsIgnoreCase("likeComment")){
 
                             }else if(request.method.equalsIgnoreCase("endConnection")){
@@ -182,6 +184,10 @@ public class StartNetworkActivity extends AppCompatActivity {
                         response = HandleApi.readHttpResponse(messageFromServer);
                         waitABit();
                     }
+
+                    //do something with responce from server
+
+
                 }//while clientCarryOn
 
                 connectionToServer.shutdownInput();

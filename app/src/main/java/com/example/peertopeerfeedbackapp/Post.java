@@ -24,8 +24,6 @@ public class Post {
     }
 
 
-
-
     private class Comment{
         private String owner;
         private String contens;
