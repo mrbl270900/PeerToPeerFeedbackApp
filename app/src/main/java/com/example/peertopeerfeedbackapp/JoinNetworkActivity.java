@@ -95,7 +95,7 @@ public class JoinNetworkActivity extends AppCompatActivity implements View.OnCli
                         waitABit();
                     }
                     if(command.equalsIgnoreCase("getData")){
-                        //logic for what to do when data is returned
+                        infoText.setText(response.body);
                     }
 
                 }//while clientCarryOn
